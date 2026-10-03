@@ -31,15 +31,31 @@ jobs:
         npm install
         npm run build
 
-    - name: Add Android Platform & Build APK
+    - name: Add Android Platform & Fix Kotlin Conflict
       run: |
         cd frontend
         npm install --save-dev @capacitor/cli @capacitor/core @capacitor/android
         npx @capacitor/cli add android || true
         npx @capacitor/cli sync android
+        
+        # Injeta a regra de resolução de conflitos do Kotlin no build.gradle do projeto Android
         cd android
+        echo "" >> build.gradle
+        echo "allprojects {" >> build.gradle
+        echo "    configurations.all {" >> build.gradle
+        echo "        resolutionStrategy.eachDependency { details ->" >> build.gradle
+        echo "            if (details.requested.group == 'org.jetbrains.kotlin') {" >> build.gradle
+        echo "                details.useVersion '1.8.22'" >> build.gradle
+        echo "            }" >> build.gradle
+        echo "        }" >> build.gradle
+        echo "    }" >> build.gradle
+        echo "}" >> build.gradle
+
+    - name: Build Android Debug APK
+      run: |
+        cd frontend/android
         chmod +x gradlew
-        ./gradlew assembleDebug --warning-mode all
+        ./gradlew clean assembleDebug --warning-mode all
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
