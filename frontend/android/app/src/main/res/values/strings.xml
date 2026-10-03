@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Panteão Nórdico IA</string>
+    <string name="title_activity_main">Panteão Nórdico IA</string>
+    <string name="package_name">com.panteao.nordico.ia</string>
+    <string name="custom_url_scheme">com.panteao.nordico.ia</string>
+</resources>
