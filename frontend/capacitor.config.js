@@ -1,6 +1,4 @@
-import { CapacitorConfig } from '@capacitor/cli';
-
-const config: CapacitorConfig = {
+module.exports = {
   appId: 'com.panteao.nordico.ia',
   appName: 'Panteão Nórdico IA',
   webDir: 'dist',
@@ -8,5 +6,3 @@ const config: CapacitorConfig = {
     androidScheme: 'https'
   }
 };
-
-export default config;
