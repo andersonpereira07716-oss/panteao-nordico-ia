@@ -1,5 +1,8 @@
 {
-  "appId": "com.panteaonordico.ia",
+  "appId": "com.panteao.nordico.ia",
   "appName": "Panteão Nórdico IA",
-  "webDir": "dist"
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
 }
