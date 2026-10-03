@@ -31,10 +31,12 @@ jobs:
         npm install
         npm run build
 
-    - name: Initialize Capacitor Android & Build
+    - name: Add Android Platform & Build APK
       run: |
         cd frontend
-        npx @capacitor/cli copy android
+        npm install @capacitor/android
+        npx cap add android || true
+        npx cap sync android
         cd android
         chmod +x gradlew
         ./gradlew assembleDebug --warning-mode all
