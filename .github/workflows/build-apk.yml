@@ -34,9 +34,7 @@ jobs:
     - name: Add Android Platform & Sync
       run: |
         cd frontend
-        # Garante que o capacitor CLI está instalado localmente
         npm install --save-dev @capacitor/cli @capacitor/core @capacitor/android
-        # Usa o binário local diretamente para evitar erros do npx
         ./node_modules/.bin/cap add android || true
         ./node_modules/.bin/cap sync android
 
@@ -44,7 +42,7 @@ jobs:
       run: |
         cd frontend/android
         chmod +x gradlew
-        ./gradlew assembleDebug --stacktrace
+        ./gradlew assembleDebug --info --stacktrace
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
