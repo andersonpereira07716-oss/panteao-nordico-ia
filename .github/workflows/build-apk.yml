@@ -34,8 +34,11 @@ jobs:
     - name: Add Android Platform & Sync
       run: |
         cd frontend
-        npx cap add android || true
-        npx cap sync android
+        # Garante que o capacitor CLI está instalado localmente
+        npm install --save-dev @capacitor/cli @capacitor/core @capacitor/android
+        # Usa o binário local diretamente para evitar erros do npx
+        ./node_modules/.bin/cap add android || true
+        ./node_modules/.bin/cap sync android
 
     - name: Build Android Debug APK
       run: |
