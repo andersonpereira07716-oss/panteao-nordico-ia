@@ -38,19 +38,11 @@ jobs:
         ./node_modules/.bin/cap add android || true
         ./node_modules/.bin/cap sync android
 
-    - name: Fix Gradle Properties for CI
-      run: |
-        cd frontend/android
-        echo "android.useAndroidX=true" >> gradle.properties
-        echo "android.enableJetifier=true" >> gradle.properties
-        # Garante versão estável do gradle wrapper se necessário
-        ./gradlew wrapper --gradle-version 8.4
-
     - name: Build Android Debug APK
       run: |
         cd frontend/android
         chmod +x gradlew
-        ./gradlew assembleDebug --stacktrace
+        ./gradlew clean assembleDebug --stacktrace
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
