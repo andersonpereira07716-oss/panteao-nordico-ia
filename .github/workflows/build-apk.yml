@@ -31,18 +31,13 @@ jobs:
         npm install
         npm run build
 
-    - name: Add Android Platform & Sync
+    - name: Initialize Capacitor Android & Build
       run: |
         cd frontend
-        npm install --save-dev @capacitor/cli @capacitor/core @capacitor/android
-        ./node_modules/.bin/cap add android || true
-        ./node_modules/.bin/cap sync android
-
-    - name: Build Android Debug APK
-      run: |
-        cd frontend/android
+        npx @capacitor/cli copy android
+        cd android
         chmod +x gradlew
-        ./gradlew clean assembleDebug --stacktrace
+        ./gradlew assembleDebug --warning-mode all
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
