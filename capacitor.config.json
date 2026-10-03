@@ -1,0 +1,6 @@
+{
+  "appId": "com.panteaonordico.ia",
+  "appName": "Panteão Nórdico IA",
+  "webDir": "frontend/dist",
+  "bundledWebRuntime": false
+}
