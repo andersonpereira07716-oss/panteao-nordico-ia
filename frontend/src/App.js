@@ -2,127 +2,120 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView, StatusBar, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 
 const nordicAgents = [
-  { id: 'odin', name: 'ODIN', role: 'O Allfather • Oráculo Supremo', color: '#38bdf8', desc: 'Sabedoria ancestral, visão estratégica profunda e análise global de dados e caminhos.' },
-  { id: 'thor', name: 'THOR', role: 'O Protetor • Força de Combate', color: '#ef4444', desc: 'Poder bruto, automação de alta performance e superação de barreiras técnicas.' },
-  { id: 'freya', name: 'FREYA', role: 'Deusa do Charme • Magia e Conteúdo', color: '#f472b6', desc: 'Atração magnética, copywriting persuasivo e conexões visuais de alto impacto.' },
-  { id: 'loki', name: 'LOKI', role: 'O Estrategista • Mestre das Ilusões', color: '#4ade80', desc: 'Soluções criativas fora da caixa, engenharia de prompts avançada e adaptabilidade.' },
-  { id: 'heimdallr', name: 'HEIMDALLr', role: 'O Vigia • Guarda da Bifrost', color: '#fbbf24', desc: 'Monitoramento em tempo real, segurança de sistemas e vigilância de performance.' },
+  { id: 'odin', name: 'ODIN', role: 'O Allfather • Oráculo Supremo', color: '#38bdf8', desc: 'Visão estratégica e análise global.' },
+  { id: 'thor', name: 'THOR', role: 'O Protetor • Força de Combate', color: '#ef4444', desc: 'Automação pesada e resolução de bugs.' },
+  { id: 'freya', name: 'FREYA', role: 'Deusa do Charme • Magia & Conteúdo', color: '#f472b6', desc: 'Copywriting e atração magnética.' },
+  { id: 'loki', name: 'LOKI', role: 'O Estrategista • Mestre das Ilusões', color: '#4ade80', desc: 'Soluções criativas fora da caixa.' },
+  { id: 'heimdallr', name: 'HEIMDALLr', role: 'O Vigia • Guarda da Bifrost', color: '#fbbf24', desc: 'Monitoramento e segurança em tempo real.' },
 ];
 
 export default function App() {
-  const [selectedAgent, setSelectedAgent] = useState(nordicAgents[0]);
-  const [chatActive, setChatActive] = useState(false);
-  const [messages, setMessages] = useState([
-    { sender: 'agent', text: 'Saudações, mortal. Estou conectado à rede e pronto para atuar.' }
+  const [activeTab, setActiveTab] = useState('panteao'); // 'panteao' ou 'conselho'
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [councilMessages, setCouncilMessages] = useState([
+    { sender: 'system', text: '⚡ O Panteão Nórdico foi convocado na Bifrost. Todos os deuses estão conectados.' }
   ]);
   const [inputText, setInputText] = useState('');
 
-  const handleSendMessage = () => {
+  const handleSendCouncil = () => {
     if (!inputText.trim()) return;
-    const newMsgs = [...messages, { sender: 'user', text: inputText }];
-    setMessages(newMsgs);
+    const userMsg = inputText;
+    setCouncilMessages(prev => [...prev, { sender: 'user', text: userMsg }]);
     setInputText('');
-    
-    // Resposta simulada imersiva do agente
+
+    // Resposta sincronizada do Panteão
     setTimeout(() => {
-      setMessages(prev => [
-        ...prev, 
-        { sender: 'agent', text: `[${selectedAgent.name}] Processando sua diretriz através dos reinos... Comando executado com sucesso.` }
+      setCouncilMessages(prev => [
+        ...prev,
+        { sender: 'odin', text: `[ODIN]: Analisei a diretriz "${userMsg}". A estratégia macro está traçada.` },
+        { sender: 'thor', text: `[THOR]: Força de processamento alocada! Pronto para executar no ecossistema.` },
+        { sender: 'heimdallr', text: `[HEIMDALLr]: Canais seguros e rotas da Bifrost monitoradas. Tudo limpo.` }
       ]);
-    }, 1000);
+    }, 1200);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#050811" />
       
-      {/* Cabeçalho Nórdico */}
+      {/* Cabeçalho Principal Unificado */}
       <View style={styles.header}>
         <View style={styles.statusBadge}>
-          <View style={[styles.statusDot, { backgroundColor: selectedAgent.color }]} />
+          <View style={styles.statusDot} />
           <Text style={styles.headerSubtitle}>PANTEÃO NÓRDICO • IA 24/7</Text>
         </View>
-        <Text style={styles.headerTitle}>{selectedAgent.name}</Text>
-        <Text style={styles.headerRole}>{selectedAgent.role}</Text>
+        <Text style={styles.headerTitle}>SALA DO TRONO UNIFICADA</Text>
+        
+        {/* Alternador de Abas */}
+        <View style={styles.tabToggleRow}>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'panteao' && styles.tabButtonActive]}
+            onPress={() => { setActiveTab('panteao'); setSelectedAgent(null); }}
+          >
+            <Text style={[styles.tabButtonText, activeTab === 'panteao' && styles.tabButtonTextActive]}>Os 5 Deuses</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'conselho' && styles.tabButtonActive]}
+            onPress={() => setActiveTab('conselho')}
+          >
+            <Text style={[styles.tabButtonText, activeTab === 'conselho' && styles.tabButtonTextActive]}>Conselho Coletivo ⚡</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
-      {/* Carrossel de Deuses / Agentes Corrigido (Sem cortes) */}
-      <View style={styles.navWrapper}>
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={styles.navContainer}
-        >
-          {nordicAgents.map((agent) => (
-            <TouchableOpacity 
-              key={agent.id}
-              style={[
-                styles.navButton, 
-                selectedAgent.id === agent.id && { borderColor: agent.color, backgroundColor: '#111827', shadowColor: agent.color }
-              ]}
-              onPress={() => {
-                setSelectedAgent(agent);
-                setChatActive(false);
-                setMessages([{ sender: 'agent', text: `Saudações. Eu sou ${agent.name}. Como posso auxiliar em sua jornada hoje?` }]);
-              }}
-            >
-              <Text style={[styles.navText, selectedAgent.id === agent.id && { color: agent.color, fontWeight: 'bold' }]}>
-                {agent.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
-      {/* Conteúdo Principal ou Chat Ativo */}
-      {!chatActive ? (
-        <ScrollView contentContainerStyle={styles.content}>
-          <View style={[styles.card, { borderColor: selectedAgent.color }]}>
-            <View style={styles.cardHeaderRow}>
-              <Text style={[styles.cardTitle, { color: selectedAgent.color }]}>{selectedAgent.name}</Text>
-              <View style={[styles.tagContainer, { backgroundColor: selectedAgent.color + '22', borderColor: selectedAgent.color }]}>
-                <Text style={[styles.tagText, { color: selectedAgent.color }]}>ONLINE</Text>
-              </View>
-            </View>
-
-            <Text style={styles.cardDesc}>{selectedAgent.desc}</Text>
-            
-            <View style={styles.featureBox}>
-              <Text style={styles.featureText}>⚡ Conexão direta com Supabase & Gemini API</Text>
-              <Text style={styles.featureText}>⚡ Processamento otimizado no ecossistema mobile</Text>
-              <Text style={styles.featureText}>⚡ Pronto para automações e escala de projetos</Text>
-            </View>
-
-            <TouchableOpacity 
-              style={[styles.actionButton, { backgroundColor: selectedAgent.color }]}
-              onPress={() => setChatActive(true)}
-            >
-              <Text style={styles.actionButtonText}>Invocar {selectedAgent.name}</Text>
-            </TouchableOpacity>
+      {/* Conteúdo dinâmico baseado na aba */}
+      {activeTab === 'panteao' && !selectedAgent ? (
+        <ScrollView contentContainerStyle={styles.gridContent}>
+          <Text style={styles.sectionSubtitle}>Toque em uma divindade para abrir o canal individual direto:</Text>
+          
+          <View style={styles.cardsGrid}>
+            {nordicAgents.map((agent) => (
+              <TouchableOpacity 
+                key={agent.id}
+                style={[styles.agentCard, { borderColor: agent.color }]}
+                onPress={() => setSelectedAgent(agent)}
+              >
+                <View style={styles.cardHeaderRow}>
+                  <Text style={[styles.cardAgentName, { color: agent.color }]}>{agent.name}</Text>
+                  <View style={[styles.miniDot, { backgroundColor: agent.color }]} />
+                </View>
+                <Text style={styles.cardAgentRole}>{agent.role}</Text>
+                <Text style={styles.cardAgentDesc}>{agent.desc}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </ScrollView>
+      ) : activeTab === 'panteao' && selectedAgent ? (
+        <View style={styles.singleChatView}>
+          <View style={styles.singleChatHeader}>
+            <TouchableOpacity onPress={() => setSelectedAgent(null)}>
+              <Text style={styles.backLink}>← Voltar aos 5 Deuses</Text>
+            </TouchableOpacity>
+            <Text style={[styles.singleChatTitle, { color: selectedAgent.color }]}>{selectedAgent.name}</Text>
+          </View>
+          <View style={styles.singleChatBody}>
+            <View style={[styles.agentBubble, { borderColor: selectedAgent.color + '44' }]}>
+              <Text style={styles.agentText}>Saudações, criador. Eu sou **{selectedAgent.name}** ({selectedAgent.role}). Como posso auxiliar na sua missão hoje?</Text>
+            </View>
+          </View>
+        </View>
       ) : (
+        /* Aba de Conselho Coletivo (Todos juntos) */
         <KeyboardAvoidingView 
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-          style={styles.chatContainer}
+          style={styles.councilContainer}
         >
-          <View style={styles.chatHeaderBar}>
-            <TouchableOpacity onPress={() => setChatActive(false)}>
-              <Text style={styles.backText}>← Voltar ao Panteão</Text>
-            </TouchableOpacity>
-            <Text style={[styles.chatActiveTitle, { color: selectedAgent.color }]}>Canal com {selectedAgent.name}</Text>
-          </View>
-
-          <ScrollView contentContainerStyle={styles.chatScroll}>
-            {messages.map((msg, index) => (
+          <ScrollView contentContainerStyle={styles.councilScroll}>
+            {councilMessages.map((msg, index) => (
               <View 
                 key={index} 
                 style={[
-                  styles.messageBubble, 
-                  msg.sender === 'user' ? styles.userBubble : [styles.agentBubble, { borderColor: selectedAgent.color + '44' }]
+                  styles.msgBubble, 
+                  msg.sender === 'user' ? styles.userMsg : 
+                  msg.sender === 'system' ? styles.systemMsg : styles.groupMsg
                 ]}
               >
-                <Text style={msg.sender === 'user' ? styles.userText : styles.agentText}>
+                <Text style={msg.sender === 'user' ? styles.userText : styles.groupText}>
                   {msg.text}
                 </Text>
               </View>
@@ -132,16 +125,13 @@ export default function App() {
           <View style={styles.inputArea}>
             <TextInput
               style={styles.input}
-              placeholder={`Digite sua ordem para ${selectedAgent.name}...`}
+              placeholder="Digite uma ordem para todo o Panteão..."
               placeholderTextColor="#6b7280"
               value={inputText}
               onChangeText={setInputText}
             />
-            <TouchableOpacity 
-              style={[styles.sendButton, { backgroundColor: selectedAgent.color }]}
-              onPress={handleSendMessage}
-            >
-              <Text style={styles.sendButtonText}>Enviar</Text>
+            <TouchableOpacity style={styles.sendButton} onPress={handleSendCouncil}>
+              <Text style={styles.sendButtonText}>Invocar Todos</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
@@ -156,182 +146,180 @@ const styles = StyleSheet.create({
     backgroundColor: '#050811',
   },
   header: {
-    paddingVertical: 18,
+    paddingVertical: 15,
     paddingHorizontal: 20,
-    alignItems: 'center',
     backgroundColor: '#0b0f19',
     borderBottomWidth: 1,
     borderBottomColor: '#1f2937',
+    alignItems: 'center',
   },
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
     gap: 6,
   },
   statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#4ade80',
   },
   headerSubtitle: {
-    fontSize: 11,
+    fontSize: 10,
     color: '#9ca3af',
     letterSpacing: 2,
     fontWeight: '600',
   },
   headerTitle: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#ffffff',
     letterSpacing: 1,
+    marginBottom: 12,
   },
-  headerRole: {
-    fontSize: 13,
+  tabToggleRow: {
+    flexDirection: 'row',
+    backgroundColor: '#111827',
+    borderRadius: 10,
+    padding: 3,
+    width: '100%',
+    maxWidth: 320,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  tabButtonActive: {
+    backgroundColor: '#1f2937',
+    elevation: 2,
+  },
+  tabButtonText: {
+    color: '#9ca3af',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  tabButtonTextActive: {
     color: '#38bdf8',
-    marginTop: 2,
+  },
+  gridContent: {
+    padding: 16,
+  },
+  sectionSubtitle: {
+    fontSize: 12,
+    color: '#9ca3af',
+    marginBottom: 14,
     textAlign: 'center',
   },
-  navWrapper: {
-    backgroundColor: '#090d16',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1f2937',
-    paddingVertical: 10,
+  cardsGrid: {
+    gap: 12,
   },
-  navContainer: {
-    paddingHorizontal: 15,
-    gap: 10,
-    alignItems: 'center',
-  },
-  navButton: {
-    paddingHorizontal: 18,
-    paddingVertical: 9,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#374151',
-    backgroundColor: '#0f172a',
-    height: 42,
-    justifyContent: 'center',
-    elevation: 3,
-  },
-  navText: {
-    color: '#9ca3af',
-    fontSize: 13,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-  },
-  content: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  card: {
+  agentCard: {
     backgroundColor: '#0b0f19',
-    borderWidth: 2,
-    borderRadius: 20,
-    padding: 22,
-    width: '100%',
-    maxWidth: 420,
-    elevation: 8,
+    borderWidth: 1.5,
+    borderRadius: 14,
+    padding: 16,
+    elevation: 4,
   },
   cardHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 4,
+  },
+  cardAgentName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  miniDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  cardAgentRole: {
+    fontSize: 11,
+    color: '#38bdf8',
     marginBottom: 8,
+    fontWeight: '600',
   },
-  cardTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  tagContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-  },
-  tagText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  cardDesc: {
-    fontSize: 15,
-    color: '#d1d5db',
-    lineHeight: 22,
-    marginBottom: 18,
-  },
-  featureBox: {
-    backgroundColor: '#111827',
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 20,
-    gap: 8,
-  },
-  featureText: {
-    color: '#9ca3af',
+  cardAgentDesc: {
     fontSize: 13,
+    color: '#d1d5db',
+    lineHeight: 18,
   },
-  actionButton: {
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 4,
-  },
-  actionButtonText: {
-    color: '#050811',
-    fontSize: 16,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  chatContainer: {
+  singleChatView: {
     flex: 1,
-    backgroundColor: '#050811',
+    padding: 16,
   },
-  chatHeaderBar: {
+  singleChatHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    marginBottom: 16,
     backgroundColor: '#0b0f19',
-    borderBottomWidth: 1,
-    borderBottomColor: '#1f2937',
+    padding: 12,
+    borderRadius: 10,
   },
-  backText: {
+  backLink: {
     color: '#38bdf8',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
   },
-  chatActiveTitle: {
-    fontSize: 14,
+  singleChatTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  chatScroll: {
-    padding: 15,
-    gap: 12,
-  },
-  messageBubble: {
-    padding: 12,
-    borderRadius: 12,
-    maxWidth: '80%',
-  },
-  userBubble: {
-    backgroundColor: '#1e293b',
-    alignSelf: 'flex-end',
+  singleChatBody: {
+    flex: 1,
   },
   agentBubble: {
     backgroundColor: '#0b0f19',
+    padding: 16,
+    borderRadius: 12,
     borderWidth: 1,
-    alignSelf: 'flex-start',
-  },
-  userText: {
-    color: '#f8fafc',
-    fontSize: 14,
   },
   agentText: {
     color: '#cbd5e1',
     fontSize: 14,
+    lineHeight: 20,
+  },
+  councilContainer: {
+    flex: 1,
+  },
+  councilScroll: {
+    padding: 16,
+    gap: 12,
+  },
+  msgBubble: {
+    padding: 12,
+    borderRadius: 12,
+    maxWidth: '85%',
+  },
+  userMsg: {
+    backgroundColor: '#1e293b',
+    alignSelf: 'flex-end',
+  },
+  systemMsg: {
+    backgroundColor: '#111827',
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: '#374151',
+  },
+  groupMsg: {
+    backgroundColor: '#0b0f19',
+    borderWidth: 1,
+    borderColor: '#38bdf844',
+    alignSelf: 'flex-start',
+  },
+  userText: {
+    color: '#f8fafc',
+    fontSize: 13,
+  },
+  groupText: {
+    color: '#cbd5e1',
+    fontSize: 13,
   },
   inputArea: {
     flexDirection: 'row',
@@ -347,20 +335,21 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: 13,
     borderWidth: 1,
     borderColor: '#374151',
     height: 44,
   },
   sendButton: {
     justifyContent: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
+    backgroundColor: '#38bdf8',
     borderRadius: 8,
     height: 44,
   },
   sendButtonText: {
     color: '#050811',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 12,
   },
 });
