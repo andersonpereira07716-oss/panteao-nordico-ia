@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView, ScrollView, Dimensions } from 'react-native';
-
-const { width } = Dimensions.get('window');
+import { StyleSheet, Text, View, Image, SafeAreaView, ScrollView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="light" backgroundColor="#090d16" />
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={styles.title}>Panteão Nórdico IA</Text>
         
@@ -22,7 +22,7 @@ export default function App() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Bem-vindo, Viajante</Text>
           <Text style={styles.cardText}>
-            Aceda à sabedoria ancestral de Odin, Thor e Freya. Faça as suas perguntas aos deuses nórdicos.
+            Aceda à sabedoria ancestral de Odin, Thor e Freya. O seu portal para a mitologia nórdica está pronto.
           </Text>
         </View>
       </ScrollView>
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     color: '#f8fafc',
     marginBottom: 20,
     textAlign: 'center',
-    letterSpacing: 1,
   },
   imageContainer: {
     width: 160,
@@ -58,11 +57,6 @@ const styles = StyleSheet.create({
     borderColor: '#38bdf8',
     marginBottom: 20,
     backgroundColor: '#1e293b',
-    elevation: 8,
-    shadowColor: '#38bdf8',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
   },
   logo: {
     width: '100%',
@@ -82,7 +76,6 @@ const styles = StyleSheet.create({
     width: '100%',
     borderWidth: 1,
     borderColor: '#1f2937',
-    elevation: 4,
   },
   cardTitle: {
     color: '#38bdf8',
